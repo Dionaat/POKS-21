@@ -16,4 +16,3 @@ x2 = int(input("введите x2: "))
 y2 = int(input("введите y2: "))
 
 RectPS()
-
