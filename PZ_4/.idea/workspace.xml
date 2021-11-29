@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ef69c1f6-5535-4bb1-b5af-e1272ce4bc5a" name="Default Changelist" comment="" />
+    <list default="true" id="ef69c1f6-5535-4bb1-b5af-e1272ce4bc5a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../otchet/otchet_3_1.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../otchet/otchet_3_2.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../otchet/otchet_4_1.docx" beforeDir="false" afterPath="$PROJECT_DIR$/../otchet/otchet_4_1.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../otchet/otchet_4_2.docx" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
