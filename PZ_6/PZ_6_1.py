@@ -11,6 +11,7 @@ while n:
             break
     a.append(inp)
     n -= 1
+
 t = bool
 p = 0
 d = float
