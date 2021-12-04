@@ -3,4 +3,4 @@
 s = input('S= ')
 s1 = input('S1= ')
 s2 = input('S2= ')
-print(s.replace(s1, s2, 1))   # вывод
+print(s.replace(s1, s2, 1))   # вывод данных
