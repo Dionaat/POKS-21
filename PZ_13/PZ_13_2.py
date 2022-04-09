@@ -9,7 +9,7 @@ g = [list(i) for i in list (gorod)]
 print(g)
 
 f = []
-n = ()
+n = 0
 
 for i in g:
     for j in i:
