@@ -13,3 +13,5 @@ for i in open('Dostoevsky.txt', encoding='utf-8').read().split('\n'):
 for i in result:
     if len(i) > 0:
         print(*i)
+
+        
