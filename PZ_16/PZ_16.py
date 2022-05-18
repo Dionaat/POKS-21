@@ -1,3 +1,7 @@
+# Приложение ВЫДАЧА КРЕДИТОВ для некоторой организации. БД должна содержать таблицу Клиент со следующей
+# структурой записи: ФИО клиента, ФИО сотрудника банка, срок кредита, процент кредита, сумма кредита.
+# БД должна обеспечивать получение информации по сроку кредита.
+
 import tkinter as tk
 from tkinter import ttk
 import sqlite3 as sq
@@ -17,54 +21,54 @@ class Main(tk.Frame):
         toolbar = tk.Frame(bg='#a0dea0', bd=4)
         toolbar.pack(side=tk.TOP, fill=tk.X)
 
-        self.add_img = tk.PhotoImage(file="BD/11.gif")
+        # self.add_img = tk.PhotoImage(file="BD/11.gif")
         self.btn_open_dialog = tk.Button(toolbar, text='Добавить игрока', command=self.open_dialog, bg='#5da130', bd=0,
-                                    compound=tk.TOP, image=self.add_img)
+                                    compound=tk.TOP)#, image=self.add_img)
         self.btn_open_dialog.pack(side=tk.LEFT)
 
-        self.update_img = tk.PhotoImage(file="BD/12.gif")
+        # self.update_img = tk.PhotoImage(file="BD/12.gif")
         btn_edit_dialog = tk.Button(toolbar, text="Редактировать", command=self.open_update_dialog, bg='#5da130',
-                                    bd=0, compound=tk.TOP, image=self.update_img)
+                                    bd=0, compound=tk.TOP)#, image=self.update_img)
         btn_edit_dialog.pack(side=tk.LEFT)
 
-        self.delete_img = tk.PhotoImage(file="BD/13.gif")
+        # self.delete_img = tk.PhotoImage(file="BD/13.gif")
         btn_delete = tk.Button(toolbar, text="Удалить запись", command=self.delete_records, bg='#5da130',
-                                    bd=0, compound=tk.TOP, image=self.delete_img)
+                                    bd=0, compound=tk.TOP)#, image=self.delete_img)
         btn_delete.pack(side=tk.LEFT)
 
-        self.search_img = tk.PhotoImage(file="BD/14.gif")
+        # self.search_img = tk.PhotoImage(file="BD/14.gif")
         btn_search = tk.Button(toolbar, text="Поиск записи", command=self.open_search_dialog, bg='#5da130',
-                               bd=0, compound=tk.TOP, image=self.search_img)
+                               bd=0, compound=tk.TOP)#, image=self.search_img)
         btn_search.pack(side=tk.LEFT)
 
-        self.refresh_img = tk.PhotoImage(file="BD/15.gif")
+        # self.refresh_img = tk.PhotoImage(file="BD/15.gif")
         btn_refresh = tk.Button(toolbar, text="Обновить экран", command=self.view_records, bg='#5da130',
-                               bd=0, compound=tk.TOP, image=self.refresh_img)
+                               bd=0, compound=tk.TOP)#, image=self.refresh_img)
         btn_refresh.pack(side=tk.LEFT)
 
-        self.tree = ttk.Treeview(self, columns=('user_id', 'name', 'sex', 'old', 'score'), height=15, show='headings')
+        self.tree = ttk.Treeview(self, columns=('klient', 'sotr', 'srok', 'proс', 'score'), height=15, show='headings')
 
-        self.tree.column('user_id', width=50, anchor=tk.CENTER)
-        self.tree.column('name', width=180, anchor=tk.CENTER)
-        self.tree.column('sex', width=140, anchor=tk.CENTER)
+        self.tree.column('klient', width=50, anchor=tk.CENTER)
+        self.tree.column('sotr', width=180, anchor=tk.CENTER)
+        self.tree.column('proс', width=140, anchor=tk.CENTER)
         self.tree.column('old', width=140, anchor=tk.CENTER)
         self.tree.column('score', width=140, anchor=tk.CENTER)
 
-        self.tree.heading('user_id', text='ID')
-        self.tree.heading('name', text='Имя игрока')
-        self.tree.heading('sex', text='Пол игрока')
-        self.tree.heading('old', text='Возраст игрока')
-        self.tree.heading('score', text='Результат игрока')
+        self.tree.heading('klient', text='ФИО клиента')
+        self.tree.heading('sotr', text='ФИО сотрудника')
+        self.tree.heading('srok', text='Срок кредита')
+        self.tree.heading('proс', text='Процент кредита')
+        self.tree.heading('score', text='Сумма кредита')
 
         self.tree.pack()
 
-    def records(self, user_id, name, sex, old, score):
-        self.db.insert_data(user_id, name, sex, old, score)
+    def records(self, klient, sotr, srok, proс, score):
+        self.db.insert_data(klient, sotr, srok, proс, score)
         self.view_records()
 
-    def update_record(self, user_id, name, sex, old, score):
-        self.db.cur.execute("""UPDATE users SET user_id=?, name=?, sex=?, old=?, score=? WHERE user_id=?""",
-                            (user_id, name, sex, old, score, self.tree.set(self.tree.selection()[0], '#1')))
+    def update_record(self, klient, sotr, srok, proс, score):
+        self.db.cur.execute("""UPDATE users SET klient=?, sotr=?, srok=?, proс=?, score=? WHERE klient=?""",
+                            (klient, sotr, srok, proс, score, self.tree.set(self.tree.selection()[0], '#1')))
         self.db.con.commit()
         self.view_records()
 
@@ -75,13 +79,13 @@ class Main(tk.Frame):
 
     def delete_records(self):
         for selection_item in self.tree.selection():
-            self.db.cur.execute("""DELETE FROM users WHERE user_id=?""", (self.tree.set(selection_item, '#1'),))
+            self.db.cur.execute("""DELETE FROM users WHERE klient=?""", (self.tree.set(selection_item, '#1'),))
         self.db.con.commit()
         self.view_records()
 
-    # def search_records(self, user_id):
-    #     user_id = ("%" + user_id + "%",)
-    #     self.db.cur.execute("""SELECT * FROM users WHERE name LIKE ?""", user_id)
+    # def search_records(self, klient):
+    #     klient = ("%" + klient + "%",)
+    #     self.db.cur.execute("""SELECT * FROM users WHERE sotr LIKE ?""", klient)
     #     [self.tree.delete(i) for i in self.tree.get_children()]
     #     [self.tree.insert('', 'end', values=row) for row in self.db.cur.fetchall()]
 
@@ -120,10 +124,10 @@ class Child(tk.Toplevel):
         self.entry_description = ttk.Entry(self)
         self.entry_description.place(x=110, y=25)
 
-        label_name = tk.Label(self, text='Имя')
-        label_name.place(x=50, y=50)
-        self.entry_name = ttk.Entry(self)
-        self.entry_name.place(x=110, y=50)
+        label_sotr = tk.Label(self, text='Имя')
+        label_sotr.place(x=50, y=50)
+        self.entry_sotr = ttk.Entry(self)
+        self.entry_sotr.place(x=110, y=50)
 
         label_sex = tk.Label(self, text='Пол')
         label_sex.place(x=50, y=75)
@@ -200,19 +204,19 @@ class Search(tk.Toplevel):
 class DB:
     def __init__(self):
 
-        with sq.connect('BD/saper.db') as self.con:
+        with sq.connect('BD/vidacha.db') as self.con:
             self.cur = self.con.cursor()
             self.cur.execute("""CREATE TABLE IF NOT EXISTS users (
-                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                sex INTEGER NOT NULL DEFAULT 1,
-                old INTEGER,
+                klient INTEGER PRIMARY KEY AUTOINCREMENT,
+                sotr TEXT NOT NULL,
+                srok INTEGER NOT NULL DEFAULT 1,
+                proс INTEGER,
                 score INTEGER
                 )""")
 
-    def insert_data(self, user_id, name, sex, old, score):
-        self.cur.execute("""INSERT INTO users(user_id, name, sex, old, score) VALUES (?, ?, ?, ?, ?)""",
-                             (user_id, name, sex, old, score))
+    def insert_data(self, klient, sotr, srok, proс, score):
+        self.cur.execute("""INSERT INTO users(klient, sotr, srok, proс, score) VALUES (?, ?, ?, ?, ?)""",
+                             (klient, sotr, srok, proс, score))
         self.con.commit()
 
 if __name__ == "__main__":
@@ -220,7 +224,7 @@ if __name__ == "__main__":
     db = DB()
     app = Main(root)
     app.pack()
-    root.title("Работа с базой данных Сапер")
+    root.title("Работа с базой данных ВЫДАЧА КРЕДИТОВ")
     root.geometry("650x450+300+200")
     root.resizable(False, False)
     root.mainloop()
