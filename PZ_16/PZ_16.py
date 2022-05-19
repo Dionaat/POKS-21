@@ -9,7 +9,6 @@ import sqlite3 as sq
 
 
 class Main(tk.Frame):
-
     """Класс для главного окна"""
 
     def __init__(self, root):
@@ -22,37 +21,37 @@ class Main(tk.Frame):
         toolbar = tk.Frame(bg='#a0dea0', bd=4)
         toolbar.pack(side=tk.TOP, fill=tk.X)
 
-        # self.add_img = tk.PhotoImage(file="BD/11.gif")
-        self.btn_open_dialog = tk.Button(toolbar, text='Добавить игрока', command=self.open_dialog, bg='#5da130', bd=0,
-                                    compound=tk.TOP)#, image=self.add_img)
+        self.add_img = tk.PhotoImage(file="img/plus.png")
+        self.btn_open_dialog = tk.Button(toolbar, text='Добавить', command=self.open_dialog, bg='#5da130', bd=0,
+                                         compound=tk.TOP, image=self.add_img)
         self.btn_open_dialog.pack(side=tk.LEFT)
 
-        # self.update_img = tk.PhotoImage(file="BD/12.gif")
+        self.update_img = tk.PhotoImage(file="img/redak.png")
         btn_edit_dialog = tk.Button(toolbar, text="Редактировать", command=self.open_update_dialog, bg='#5da130',
-                                    bd=0, compound=tk.TOP)#, image=self.update_img)
+                                    bd=0, compound=tk.TOP, image=self.update_img)
         btn_edit_dialog.pack(side=tk.LEFT)
 
-        # self.delete_img = tk.PhotoImage(file="BD/13.gif")
+        self.delete_img = tk.PhotoImage(file="img/del.png")
         btn_delete = tk.Button(toolbar, text="Удалить запись", command=self.delete_records, bg='#5da130',
-                                    bd=0, compound=tk.TOP)#, image=self.delete_img)
+                               bd=0, compound=tk.TOP, image=self.delete_img)
         btn_delete.pack(side=tk.LEFT)
 
-        # self.search_img = tk.PhotoImage(file="BD/14.gif")
+        self.search_img = tk.PhotoImage(file="img/poisk.png")
         btn_search = tk.Button(toolbar, text="Поиск записи", command=self.open_search_dialog, bg='#5da130',
-                               bd=0, compound=tk.TOP)#, image=self.search_img)
+                               bd=0, compound=tk.TOP, image=self.search_img)
         btn_search.pack(side=tk.LEFT)
 
-        # self.refresh_img = tk.PhotoImage(file="BD/15.gif")
+        self.refresh_img = tk.PhotoImage(file="img/obn.png")
         btn_refresh = tk.Button(toolbar, text="Обновить экран", command=self.view_records, bg='#5da130',
-                               bd=0, compound=tk.TOP)#, image=self.refresh_img)
+                                bd=0, compound=tk.TOP, image=self.refresh_img)
         btn_refresh.pack(side=tk.LEFT)
 
         self.tree = ttk.Treeview(self, columns=('klient', 'sotr', 'srok', 'proс', 'score'), height=15, show='headings')
 
         self.tree.column('klient', width=50, anchor=tk.CENTER)
         self.tree.column('sotr', width=180, anchor=tk.CENTER)
+        self.tree.column('srok', width=140, anchor=tk.CENTER)
         self.tree.column('proс', width=140, anchor=tk.CENTER)
-        self.tree.column('old', width=140, anchor=tk.CENTER)
         self.tree.column('score', width=140, anchor=tk.CENTER)
 
         self.tree.heading('klient', text='ФИО клиента')
@@ -63,39 +62,39 @@ class Main(tk.Frame):
 
         self.tree.pack()
 
-    def records(self, klient, sotr, srok, proс, score):
-        self.db.insert_data(klient, sotr, srok, proс, score)
+    def records(self, klient, sotr, srok, proc, score):
+        self.db.insert_data(klient, sotr, srok, proc, score)
         self.view_records()
 
-    def update_record(self, klient, sotr, srok, proс, score):
-        self.db.cur.execute("""UPDATE users SET klient=?, sotr=?, srok=?, proс=?, score=? WHERE klient=?""",
-                            (klient, sotr, srok, proс, score, self.tree.set(self.tree.selection()[0], '#1')))
+    def update_record(self, klient, sotr, srok, proc, score):
+        self.db.cur.execute(
+            "UPDATE vidacha SET klient=?, sotr=?, srok=?, proс=?, score=? WHERE klient=?",
+                            (klient, sotr, srok, proc, score, self.tree.set(self.tree.selection()[0], '#1')))
         self.db.con.commit()
         self.view_records()
 
     def view_records(self):
-        self.db.cur.execute("""SELECT * FROM users""")
+        self.db.cur.execute("SELECT * FROM vidacha")
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db.cur.fetchall()]
 
     def delete_records(self):
         for selection_item in self.tree.selection():
-            self.db.cur.execute("""DELETE FROM users WHERE klient=?""", (self.tree.set(selection_item, '#1'),))
+            self.db.cur.execute("""DELETE FROM vidacha WHERE klient=?""", (self.tree.set(selection_item, '#1'),))
         self.db.con.commit()
         self.view_records()
 
-    # def search_records(self, klient):
-    #     klient = ("%" + klient + "%",)
-    #     self.db.cur.execute("""SELECT * FROM users WHERE sotr LIKE ?""", klient)
-    #     [self.tree.delete(i) for i in self.tree.get_children()]
-    #     [self.tree.insert('', 'end', values=row) for row in self.db.cur.fetchall()]
-
-    def search_records(self, score):
-        score = (score,)
-        self.db.cur.execute("""SELECT * FROM users WHERE score>?""", score)
+    def search_records(self, srok):
+        klient = ("%" + srok + "%",)
+        self.db.cur.execute("""SELECT * FROM vidacha WHERE srok LIKE ?""", srok)
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db.cur.fetchall()]
 
+    # def search_records(self, score):
+    #     score = (score,)
+    #     self.db.cur.execute("""SELECT * FROM vidacha WHERE score>?""", score)
+    #     [self.tree.delete(i) for i in self.tree.get_children()]
+    #     [self.tree.insert('', 'end', values=row) for row in self.db.cur.fetchall()]
 
     def open_dialog(self):
         Child(root, app)
@@ -106,8 +105,8 @@ class Main(tk.Frame):
     def open_search_dialog(self):
         Search()
 
-class Child(tk.Toplevel):
 
+class Child(tk.Toplevel):
     """Класс для дочернего окна"""
 
     def __init__(self, root, app):
@@ -116,35 +115,34 @@ class Child(tk.Toplevel):
         self.view = app
 
     def init_child(self):
-        self.title('Добавить игрока')
+        self.title('Добавить')
         self.geometry('400x220+400+300')
         self.resizable(False, False)
 
-        label_description = tk.Label(self, text='Номер')
+        label_description = tk.Label(self, text='ФИО клиента')
         label_description.place(x=50, y=25)
         self.entry_description = ttk.Entry(self)
-        self.entry_description.place(x=110, y=25)
+        self.entry_description.place(x=150, y=25)
 
-        label_sotr = tk.Label(self, text='Имя')
+        label_sotr = tk.Label(self, text='ФИО сотрудника')
         label_sotr.place(x=50, y=50)
         self.entry_sotr = ttk.Entry(self)
-        self.entry_sotr.place(x=110, y=50)
+        self.entry_sotr.place(x=150, y=50)
 
-        label_sex = tk.Label(self, text='Пол')
-        label_sex.place(x=50, y=75)
-        self.combobox = ttk.Combobox(self, values=[u'Мужской', u'Женский'])
-        self.combobox.current(0)
-        self.combobox.place(x=110, y=75)
+        label_srok = tk.Label(self, text='Срок кредита')
+        label_srok.place(x=50, y=75)
+        self.entry_srok = ttk.Entry(self)
+        self.entry_srok.place(x=150, y=75)
 
-        label_old = tk.Label(self, text='Возраст')
-        label_old.place(x=50, y=100)
-        self.entry_old = ttk.Entry(self)
-        self.entry_old.place(x=110, y=100)
+        label_proc = tk.Label(self, text='Процент кредита')
+        label_proc.place(x=50, y=100)
+        self.entry_proc = ttk.Entry(self)
+        self.entry_proc.place(x=150, y=100)
 
-        label_score = tk.Label(self, text='Результат')
+        label_score = tk.Label(self, text='Сумма кредита')
         label_score.place(x=50, y=125)
         self.entry_score = ttk.Entry(self)
-        self.entry_score.place(x=110, y=125)
+        self.entry_score.place(x=150, y=125)
 
         btn_cancel = ttk.Button(self, text='Закрыть', command=self.destroy)
         btn_cancel.place(x=300, y=170)
@@ -152,13 +150,14 @@ class Child(tk.Toplevel):
         self.btn_ok = ttk.Button(self, text='Добавить')
         self.btn_ok.place(x=220, y=170)
         self.btn_ok.bind('<Button-1>', lambda event: self.view.records(self.entry_description.get(),
-                                                                       self.entry_name.get(),
-                                                                       self.combobox.get(),
-                                                                       self.entry_old.get(),
+                                                                       self.entry_sotr.get(),
+                                                                       self.entry_srok.get(),
+                                                                       self.entry_proc.get(),
                                                                        self.entry_score.get()))
 
         self.grab_set()
         self.focus_set()
+
 
 class Update(Child):
     def __init__(self):
@@ -171,11 +170,12 @@ class Update(Child):
         btn_edit = ttk.Button(self, text="Редактировать")
         btn_edit.place(x=205, y=170)
         btn_edit.bind('<Button-1>', lambda event: self.view.update_record(self.entry_description.get(),
-                                                                          self.entry_name.get(),
-                                                                          self.combobox.get(),
-                                                                          self.entry_old.get(),
+                                                                          self.entry_sotr.get(),
+                                                                          self.entry_srok.get(),
+                                                                          self.entry_proc.get(),
                                                                           self.entry_score.get()))
         self.btn_ok.destroy()
+
 
 class Search(tk.Toplevel):
     def __init__(self):
@@ -202,12 +202,12 @@ class Search(tk.Toplevel):
         btn_search.bind('<Button-1>', lambda event: self.view.search_records(self.entry_search.get()))
         btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
 
+
 class DB:
     def __init__(self):
-
-        with sq.connect('BD/vidacha.db') as self.con:
+        with sq.connect('vidacha.db') as self.con:
             self.cur = self.con.cursor()
-            self.cur.execute("""CREATE TABLE IF NOT EXISTS users (
+            self.cur.execute("""CREATE TABLE IF NOT EXISTS vidacha(
                 klient INTEGER PRIMARY KEY AUTOINCREMENT,
                 sotr TEXT NOT NULL,
                 srok INTEGER NOT NULL DEFAULT 1,
@@ -215,17 +215,18 @@ class DB:
                 score INTEGER
                 )""")
 
-    def insert_data(self, klient, sotr, srok, proс, score):
-        self.cur.execute("""INSERT INTO users(klient, sotr, srok, proс, score) VALUES (?, ?, ?, ?, ?)""",
-                             (klient, sotr, srok, proс, score))
+    def insert_data(self, klient, sotr, srok, proc, score):
+        self.cur.execute("INSERT INTO vidacha(klient, sotr, srok, proс, score) VALUES (?, ?, ?, ?, ?)",
+                         (klient, sotr, srok, proc, score))
         self.con.commit()
+
 
 if __name__ == "__main__":
     root = tk.Tk()
     db = DB()
     app = Main(root)
     app.pack()
-    root.title("Работа с базой данных ВЫДАЧА КРЕДИТОВ")
+    root.title("ВЫДАЧА КРЕДИТОВ")
     root.geometry("650x450+300+200")
     root.resizable(False, False)
     root.mainloop()
