@@ -9,7 +9,7 @@ import sqlite3 as sq
 
 
 class Main(tk.Frame):
-    """Класс для главного окна"""
+    "Класс для главного окна"
 
     def __init__(self, root):
         super().__init__(root)
@@ -18,39 +18,39 @@ class Main(tk.Frame):
         self.view_records()
 
     def init_main(self):
-        toolbar = tk.Frame(bg='#a0dea0', bd=4)
+        toolbar = tk.Frame(bg='#454C87', bd=4)
         toolbar.pack(side=tk.TOP, fill=tk.X)
 
         self.add_img = tk.PhotoImage(file="img/plus.png")
-        self.btn_open_dialog = tk.Button(toolbar, text='Добавить', command=self.open_dialog, bg='#5da130', bd=0,
-                                         compound=tk.TOP, image=self.add_img)
+        self.btn_open_dialog = tk.Button(toolbar, text='Добавить', command=self.open_dialog, bg='#3c4ccc', bd=0,
+                                         compound=tk.TOP, image=self.add_img, padx=5, pady=2, border='5')
         self.btn_open_dialog.pack(side=tk.LEFT)
 
         self.update_img = tk.PhotoImage(file="img/redak.png")
-        btn_edit_dialog = tk.Button(toolbar, text="Редактировать", command=self.open_update_dialog, bg='#5da130',
-                                    bd=0, compound=tk.TOP, image=self.update_img)
+        btn_edit_dialog = tk.Button(toolbar, text="Редактировать", command=self.open_update_dialog, bg='#3c4ccc',
+                                    bd=0, compound=tk.TOP, image=self.update_img, padx=5, pady=2, border='5')
         btn_edit_dialog.pack(side=tk.LEFT)
 
         self.delete_img = tk.PhotoImage(file="img/del.png")
-        btn_delete = tk.Button(toolbar, text="Удалить запись", command=self.delete_records, bg='#5da130',
-                               bd=0, compound=tk.TOP, image=self.delete_img)
+        btn_delete = tk.Button(toolbar, text="Удалить запись", command=self.delete_records, bg='#3c4ccc',
+                               bd=0, compound=tk.TOP, image=self.delete_img, padx=5, pady=2, border='5')
         btn_delete.pack(side=tk.LEFT)
 
         self.search_img = tk.PhotoImage(file="img/poisk.png")
-        btn_search = tk.Button(toolbar, text="Поиск записи", command=self.open_search_dialog, bg='#5da130',
-                               bd=0, compound=tk.TOP, image=self.search_img)
+        btn_search = tk.Button(toolbar, text="Поиск записи", command=self.open_search_dialog, bg='#3c4ccc',
+                               bd=0, compound=tk.TOP, image=self.search_img, padx=5, pady=2, border='5')
         btn_search.pack(side=tk.LEFT)
 
         self.refresh_img = tk.PhotoImage(file="img/obn.png")
-        btn_refresh = tk.Button(toolbar, text="Обновить экран", command=self.view_records, bg='#5da130',
-                                bd=0, compound=tk.TOP, image=self.refresh_img)
+        btn_refresh = tk.Button(toolbar, text="Обновить экран", command=self.view_records, bg='#3c4ccc',
+                                bd=0, compound=tk.TOP, image=self.refresh_img, padx=5, pady=2, border='5')
         btn_refresh.pack(side=tk.LEFT)
 
         self.tree = ttk.Treeview(self, columns=('klient', 'sotr', 'srok', 'proс', 'score'), height=15, show='headings')
 
-        self.tree.column('klient', width=50, anchor=tk.CENTER)
-        self.tree.column('sotr', width=180, anchor=tk.CENTER)
-        self.tree.column('srok', width=140, anchor=tk.CENTER)
+        self.tree.column('klient', width=120, anchor=tk.CENTER)
+        self.tree.column('sotr', width=130, anchor=tk.CENTER)
+        self.tree.column('srok', width=120, anchor=tk.CENTER)
         self.tree.column('proс', width=140, anchor=tk.CENTER)
         self.tree.column('score', width=140, anchor=tk.CENTER)
 
@@ -80,13 +80,13 @@ class Main(tk.Frame):
 
     def delete_records(self):
         for selection_item in self.tree.selection():
-            self.db.cur.execute("""DELETE FROM vidacha WHERE klient=?""", (self.tree.set(selection_item, '#1'),))
+            self.db.cur.execute("DELETE FROM vidacha WHERE klient=?", (self.tree.set(selection_item, '#1'),))
         self.db.con.commit()
         self.view_records()
 
     def search_records(self, srok):
         klient = ("%" + srok + "%",)
-        self.db.cur.execute("""SELECT * FROM vidacha WHERE srok LIKE ?""", srok)
+        self.db.cur.execute("SELECT * FROM vidacha WHERE srok LIKE ?", srok)
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db.cur.fetchall()]
 
@@ -208,7 +208,7 @@ class DB:
         with sq.connect('vidacha.db') as self.con:
             self.cur = self.con.cursor()
             self.cur.execute("""CREATE TABLE IF NOT EXISTS vidacha(
-                klient INTEGER PRIMARY KEY AUTOINCREMENT,
+                klient TEXT,
                 sotr TEXT NOT NULL,
                 srok INTEGER NOT NULL DEFAULT 1,
                 proс INTEGER,
