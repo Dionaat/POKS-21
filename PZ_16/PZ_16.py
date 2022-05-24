@@ -85,7 +85,7 @@ class Main(tk.Frame):
         self.view_records()
 
     def search_records(self, srok):
-        klient = ("%" + srok + "%",)
+        srok = ("%" + srok + "%",)
         self.db.cur.execute("SELECT * FROM vidacha WHERE srok LIKE ?", srok)
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db.cur.fetchall()]
